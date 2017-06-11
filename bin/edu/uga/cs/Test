@@ -1,0 +1,247 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.sql.Connection;
+
+import edu.uga.cs.evote.EVException;
+import edu.uga.cs.evote.entity.Ballot;
+import edu.uga.cs.evote.entity.Candidate;
+import edu.uga.cs.evote.entity.Election;
+import edu.uga.cs.evote.entity.ElectionsOfficer;
+import edu.uga.cs.evote.entity.ElectoralDistrict;
+import edu.uga.cs.evote.entity.Issue;
+import edu.uga.cs.evote.entity.PoliticalParty;
+import edu.uga.cs.evote.entity.User;
+import edu.uga.cs.evote.entity.VoteRecord;
+import edu.uga.cs.evote.entity.Voter;
+import edu.uga.cs.evote.object.ObjectLayer;
+import edu.uga.cs.evote.object.impl.ObjectLayerImpl;
+import edu.uga.cs.evote.persistence.PersistenceLayer;
+import edu.uga.cs.evote.persistence.impl.DbUtils;
+
+import edu.uga.cs.evote.persistence.impl.PersistenceLayerImpl;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Evote
+{
+    public static void main(String[] args)
+    {
+         Connection conn = null;
+         ObjectLayer objectLayer = null;
+         PersistenceLayer persistence = null;
+         
+         ElectionsOfficer        eo1;
+         ElectionsOfficer        eo2;
+         ElectoralDistrict       Ed1;
+         
+         Voter                   Vo1;
+         Voter                   Vo2;
+        
+         Ballot                  B1;
+         Ballot                  B2;
+        
+         Candidate               C1;
+         Candidate               C2;
+         Candidate               C3;
+         Candidate               C4;
+         Candidate               C5;
+         Candidate               C6;
+         Candidate               C7;
+         Candidate               C8;
+         Candidate               C9;
+         Candidate               C10;
+         Candidate               C11;
+         Candidate               C12;
+         Candidate               C13;
+         Candidate               C14;
+         Candidate               C15;
+         Candidate               C16;
+         Candidate               C17;
+         Candidate               C18;
+         
+         
+         Election                E1;
+         Election                E2;
+         Election                E3;
+         Election                E4;
+         Election                E5;
+         Election                E6;
+         
+         
+         Issue                   I1;
+         Issue                   I2;
+         Issue                   I3;
+         Issue                   I4;
+         Issue                   I5;
+         Issue                   I6;
+         
+         
+         
+         
+         PoliticalParty          P1;
+         PoliticalParty          P2;
+         
+         VoteRecord              R1;
+         
+         // get a database connection
+         try {
+             conn = DbUtils.connect();
+         } 
+         catch (Exception seq) {
+             System.err.println( "WriteTest: Unable to obtain a database connection" );
+         }
+         
+         if( conn == null ) {
+             System.out.println( "WriteTest: failed to connect to the database" );
+             return;
+         }
+         
+         // obtain a reference to the ObjectModel module      
+         objectLayer = new ObjectLayerImpl();
+         // obtain a reference to Persistence module and connect it to the ObjectModel        
+         persistence = new PersistenceLayerImpl( conn, objectLayer ); 
+         // connect the ObjectModel module to the Persistence module
+         objectLayer.setPersistence( persistence );   
+
+         try {
+             
+             // create a few people
+             eo1 = objectLayer.createElectionsOfficer("joe", "joepass", "joe@mail.com", 
+                     "Joe", "Doe", "133 Maple St., Big Town");
+             eo2 = objectLayer.createElectionsOfficer("new", "newguy", "new@mail.com", 
+                     "New", "Guy", "133 Maple St., Big Town");
+            
+             Ed1 = objectLayer.createElectoralDistrict(1,"Dist1", null,null);
+             
+             Vo1 = objectLayer.createVoter(  "Jack", Ed1, "Voter", "NewVoter1", "pass1", "pass1", "something",24,null );
+             Vo2 = objectLayer.createVoter("Karen", Ed1, "Voter", "NewVoter2", "pass", "pass", "something", 24,null);
+             
+             E1 = objectLayer.createElection("Officer", true);
+             E2 = objectLayer.createElection("Piggy", true);
+             E3 = objectLayer.createElection("Govna", true);
+             E4 = objectLayer.createElection("CSal", true);
+             E5 = objectLayer.createElection("SOW", true);
+             E6 = objectLayer.createElection("newEl", true);
+             
+             
+             
+             
+             String date = "2016-12-12 00:00:00";
+             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+             Date open = formatter.parse(date);
+             java.sql.Date open1 = new java.sql.Date(open.getTime()); 
+            
+             String date1 = "2017-12-12 00:00:00";
+             Date close = formatter.parse(date1);
+             java.sql.Date close1 = new java.sql.Date(close.getTime()); 
+            
+             B1 = objectLayer.createBallot(open1, close1, true, Ed1);
+             B2 = objectLayer.createBallot(open1, close1, false, Ed1);
+
+                          
+             I1 = objectLayer.createIssue("Question", 0, 0, B1);
+             I2 = objectLayer.createIssue("Quest", 0, 0, B1);
+             I3 = objectLayer.createIssue("Otro", 0, 0, B1); 
+             I4 = objectLayer.createIssue("nother", 0, 0, B2);
+             I5 = objectLayer.createIssue("vote", 0, 0, B2);
+             I6 = objectLayer.createIssue("please?", 0, 0, B2);
+              
+             P1 = objectLayer.createPoliticalParty(1,"Republican",null);
+             P2 = objectLayer.createPoliticalParty(1,"Democrat",null);
+             
+             C1 = objectLayer.createCandidate("Cand", P1, E1);
+             C2 = objectLayer.createCandidate("Cand2", P1, E1);
+             C3 = objectLayer.createCandidate("Cand3", P1, E1);
+             C4 = objectLayer.createCandidate("Cand4", P1, E2);
+             C5 = objectLayer.createCandidate("Cand5", P1, E2);
+             C6 = objectLayer.createCandidate("Cand6", P1, E2);
+             C7 = objectLayer.createCandidate("Cand7", P1, E3);
+             C8 = objectLayer.createCandidate("Cand8", P1, E3);
+             C9 = objectLayer.createCandidate("Cand9", P1, E3);
+             C10 = objectLayer.createCandidate("Cand10", P2, E4);
+             C11 = objectLayer.createCandidate("Cand11", P2, E4);
+             C12 = objectLayer.createCandidate("Cand12", P2, E4);
+             C13 = objectLayer.createCandidate("Cand13", P2, E5);
+             C14 = objectLayer.createCandidate("Cand14", P2, E5);
+             C15 = objectLayer.createCandidate("Cand15", P2, E5);
+             C16 = objectLayer.createCandidate("Cand16", P2, E6);
+             C17 = objectLayer.createCandidate("Cand17", P2, E6);
+             C18 = objectLayer.createCandidate("Cand18", P2, E6);
+
+             //R1 = objectLayer.createVoteRecord(0, B1, Vo2, close);
+             
+             persistence.storeElectionsOfficer(eo1 );
+             persistence.storeElectionsOfficer(eo2 );
+             persistence.storeVoter( Vo1 );
+             persistence.storeVoter( Vo2 );
+             
+             persistence.storeElection( E1 );
+             persistence.storeElection( E2 );
+             persistence.storeElection( E3 );
+             persistence.storeElection( E4 );
+             persistence.storeElection( E5 );
+             persistence.storeElection( E6 );
+               
+             persistence.storeElectoralDistrict(Ed1);
+             
+             persistence.storeBallot(B1);
+             persistence.storeBallot(B2);
+              
+             persistence.storeIssue(I1);
+             persistence.storeIssue(I2);
+             persistence.storeIssue(I3);
+             persistence.storeIssue(I4);
+             persistence.storeIssue(I5);
+             persistence.storeIssue(I6);
+             
+             persistence.storePoliticalParty(P1);
+             persistence.storePoliticalParty(P2);
+             
+             persistence.storeCandidate(C1);
+             persistence.storeCandidate(C2);
+             persistence.storeCandidate(C3);
+             persistence.storeCandidate(C4);
+             persistence.storeCandidate(C5);
+             persistence.storeCandidate(C6);
+             persistence.storeCandidate(C7);
+             persistence.storeCandidate(C8);
+             persistence.storeCandidate(C9);
+             persistence.storeCandidate(C10);
+             persistence.storeCandidate(C11);
+             persistence.storeCandidate(C12);
+             persistence.storeCandidate(C13);
+             persistence.storeCandidate(C14);
+             persistence.storeCandidate(C15);
+             persistence.storeCandidate(C16);
+             persistence.storeCandidate(C17);
+             persistence.storeCandidate(C18);
+             
+             //persistence.storeVoteRecord(R1);
+             
+             System.out.println( "Entity objects created and saved in the persistence module" );
+             
+         }
+         catch( EVException ce) {
+             System.err.println( "Exception: " + ce );
+             ce.printStackTrace();
+         }
+         catch( Exception e ) {
+             e.printStackTrace();
+         }
+         finally {
+             // close the connection
+             try {
+                 conn.close();
+             }
+             catch( Exception e ) {
+                 System.err.println( "Exception: " + e );
+             }
+         }
+    }  
+}
+
