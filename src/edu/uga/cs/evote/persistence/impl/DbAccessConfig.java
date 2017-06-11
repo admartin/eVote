@@ -37,7 +37,7 @@ public abstract class DbAccessConfig
 
     /** The password for the database user.
      */
-    static  String DB_CONNECTION_PWD = "Freiheit89$"; //change
+    static  String DB_CONNECTION_PWD = "temp"; //change
 
 }
 
